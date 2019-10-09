@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="CoffeeCup HTML Editor (www.coffeecup.com)">
+    <meta name="dcterms.created" content="Tue, 01 Oct 2019 05:58:06 GMT">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <title>Digital Health Integration</title>
+    
+    <!--[if IE]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+  <b><u><div align="center">Overview of the Machine Guided Diagnostics Platform</div></u></b>
+<p>Machine Guided Diagnostics holds the potential make high-quality public healthcare more accessible: expanding and augmenting the capabilities an experienced physician brings to the field. Its ability to triage patients, provide preliminary diagnosis, and help less skilled HCWs best support patients relies on its ability to input standardized data from a wide range of sources.</p>
+
+<p>We have built a sample Machine Guided diagnosis (MGD) app that integrates with an Identity Management service as well as with other 3rd party apps and devices.
+
+<p>APIs and Data Standards make Machine Guided Diagnostics a core part of a SOAP ecosystem. APIs and Data Standards mean the right data, and tools to collect that data can be plugged into a Machine Guided Diagnosis platform in a scaleable, modular manner. Our goal is to make SOAP available - not as an expensive custom-developed eolithic system, but as a set of portable, reusable tools.</p>
+</p>
+	<b>SOAP and how it relates to Gates strategy</b><br>
+	<br>
+Subjective Measurement<br>
+Objective Measurement<br>
+Assessment<br>
+Standard Procedures<br>
+	<br>
+	<b><u>API and data standards</u></b>
+	<br>
+	<br>
+	<b>FHIR and its Applicability to Global Public Health</b>
+	
+	<p>HL7 FHIR (Fast Healthcare Interoperability Resources) is a rapidly emerging healthcare interoperability standard. There is considerable and growing industry enthusiasm for the interoperability approach exemplified by FHIR. Though promising in many respects, FHIR is still a nascent standard. Its immediate applicability depends critically on the use cases under consideration and the relative maturity of applicable FHIR components.</p>
+
+	<a href="Whitepaper on Applicability and Feasibility of FHIR for APIs to  Support Gates Innovation Projects.pdf" title="FHIR for DHI projects">Read Full White Paper</a>
+	<br>
+	<br>
+	<b><u><div align="center">Architecture view</div></u></b>
+	<br>
+	<br>
+	<b>System Context</b>
+	<br>
+	<br>
+	<a href="C:\Users\developer\Documents\CoffeeCup Software\My Website\dhi_arch.png"><img src="dhi_arch.png" width="960" height="540" alt="" title="DHI Architecture" /></a>
+	<br>
+	<br>
+	<b>Component Definitions</b>
+	<br>
+	<br>
+	<b>Integration Mechanisms</b>
+	<br>
+	<br>
+	<b>Intent based integration for Smart phones</b>
+	<br>
+	<br>
+	<b>Web services-based integration</b>
+	<br>
+	<br>
+	<b>Pros and Cons</b>
+	<br>
+	<br>
+	<b><u>Component Catalogue</u></b>
+    <br>
+    <br>
+    <b>Subjective Measurement Systems</b>
+	<br>
+    <br>
+	<b>Standard interface definitions</b>
+	<br>
+    <br>
+	<b>FHIR Resource types</b>
+	<br>
+	<br>
+	Patient 
+	<br>
+Observation 
+	<br>
+ServiceRequest 
+    <br>
+Location 
+    <br>
+Encounter 
+    <br>
+Condition 
+    <br>
+Bundle 
+    <br>
+Practitioner 
+    <br>
+List 
+    <br>
+	<br>
+	<b>Sample FHIR resources</b>
+	<br>
+	<br>
+	<b>Objective Measurement Systems</b>
+	<br>
+	<br>
+	<b>Standard interface definitions</b>
+	<br>
+	<br>
+	<b>FHIR Resource types</b>
+	<br>
+	<br>
+	<b><u><div align="center">Identity Management System</div></u></b>
+	<br>
+	<br>
+	<b>Introduction</b>
+	<br>
+	<br>
+	This section talks about the Identity Management service app and the various API’s that can be used by apps to exercise the following functionality:
+	<br>
+	<br>
+<p>Check if a user (Health care worker/patient) is present in the system based on inputs like name, id number,biometric data. If not present, enroll the user. Get a photo and a consent check done by the user when they login to act as proof that they were physically present for the transaction. Get the patient’s signature and a proof of service to record the transaction between the HCW and the patient.
+</p>
+<p>Right now, we support the following biometric devices: Watson mini and Credence ID biometric device.</p>
+
+<p>Identity may be installed as an APK. Apps that need the above functionality need to first install Identity manager apk and then use an intent based approach (implicit intent) to exercise the above mentioned functionality.</p>
+  	<br>
+	<br>
+	<style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 21px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+</style>
+	  <h2>API’s being used</h2>
+
+<table>
+  <tr>
+    <th>Method</th>
+    <th>Input</th>
+    <th>Output</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>Connect</td>
+    <td>NA</td>
+    <td><li>Context</li>
+<li>API package version</li></td>
+    <td>Creates a connection to Identity Service. It returns a context and the version of API. The version can be used by the application to check compatibility. This API must be called first while integrating an app with IdM.</td>
+  </tr>
+  <tr>
+    <td>AddPerson</td>
+    <td><li>Context</li><li>Person Type(HCW/Patient)</li></td>
+    <td><li>Success/Failure/Need more information</li>
+<li>GUID</li></td>
+    <td>This method is called while trying to initially login a HCW or a patient. At the beginning itself, it asks for the user consent. If the person says yes, it asks him/her for name, age, id (government ID for HCW and similar ID for patient) and biometric data. We use an algorithm to calculate whether there is a user present or not based on the various inputs provided and the weightage attached to each input parameter. Note: Right now, the Identity apk has screens where these inputs can be entered by the user. Therefore the inputs - name,country code,mobile number,DOB, Skill, GUID may be left blank and won't be considered at this point. Similarly, in the output, we only receive status as success or failure. If more information is needed, that is handled in the IdM apk itself. We have retained these values in the request for future extensibility.</td>
+  </tr>
+  <tr>
+    <td>HandlePOS</td>
+    <td>Context</td>
+    <td>Success/Failure</td>
+    <td>This gets the patient signature and displays a Proof of service screen for reference. This may be called after the patient has logged in and gone through the entire process of diagnosis</td>
+  </tr>
+</table>
+<b><u>Sample code</u></b>
+<br>
+<br>
+<p>For all the API’s we need to pass an input JSON via an intent. Make sure you call “org.iprd.identity.IdmService”</p>
+
+<pre style='color:#000000;background:#ffffff;'>Intent sendIntent = new Intent()<span style='color:#808030; '>;</span>
+sendIntent.setAction("org.iprd.identity.IdmService")<span style='color:#808030; '>;</span> 
+sendIntent.putExtra("IdentityRequest",identityJSON)<span style='color:#808030; '>;</span> 
+sendIntent.setType("text/json")<span style='color:#808030; '>;</span>
+</pre>
+<!--Created using ToHtml.com on 2019-10-01 13:26:05 UTC -->
+
+The above code snippet creates an intent request (sendIntent variable) and further looks for the Identity service while calling the intent. In addition, it sends an Identity request to the Identity service app and passes the input/output using json.
+<br>
+<br>
+Here is the syntax of the input and output JSON’s for each of the API’s:
+<br>
+<br>
+<i>1. Connect</i>
+<br>
+<br>
+Input:
+<br>
+<br>
+<pre style='color:#000000;background:#ffffff;'><span style='color:#800080; '>{</span> <span style='color:#0000e6; '>"resourceType"</span><span style='color:#808030; '>:</span><span style='color:#0000e6; '>"IdentityRequest"</span><span style='color:#808030; '>,</span> <span style='color:#0000e6; '>"reqID"</span><span style='color:#808030; '>:</span><span style='color:#0000e6; '>"100"</span><span style='color:#808030; '>,</span> <span style='color:#0000e6; '>"reqTxt"</span><span style='color:#808030; '>:</span><span style='color:#0000e6; '>"ConnectToIdentity"</span><span style='color:#808030; '>,</span> <span style='color:#0000e6; '>"Inputs"</span><span style='color:#808030; '>:</span> <span style='color:#800080; '>{</span> <span style='color:#800080; '>}</span> <span style='color:#800080; '>}</span>
+</pre>
+<!--Created using ToHtml.com on 2019-10-01 13:47:01 UTC -->
+<br>
+Output:
+<br>
+<br>
+<pre style='color:#000000;background:#ffffff;'><span style='color:#800080; '>{</span> <span style='color:#0000e6; '>"resourceType"</span><span style='color:#808030; '>:</span><span style='color:#0000e6; '>"IdentityRequest"</span><span style='color:#808030; '>,</span> <span style='color:#0000e6; '>"reqTxt"</span><span style='color:#808030; '>:</span><span style='color:#0000e6; '>"ConnectToIdentity"</span><span style='color:#808030; '>,</span> <span style='color:#0000e6; '>"Outputs"</span><span style='color:#808030; '>:</span><span style='color:#800080; '>{</span> <span style='color:#0000e6; '>"currCtx"</span><span style='color:#808030; '>:</span><span style='color:#0000e6; '>"xyz"</span><span style='color:#808030; '>,</span> <span style='color:#0000e6; '>"currAPI"</span><span style='color:#808030; '>:</span><span style='color:#0000e6; '>"2"</span> <span style='color:#800080; '>}</span> <span style='color:#800080; '>}</span>
+</pre>
+<!--Created using ToHtml.com on 2019-10-01 13:48:07 UTC -->
+<br>
+<br>
+Note: The context value from the output is required in subsequent API calls.
+<br>
+<br>
+<i>2. AddPerson</i>
+<br>
+<br>
+Input:
+<br>
+<br>
+<pre style='color:#000000;background:#ffffff;'><span style='color:#800080; '>{</span> <span style='color:#0000e6; '>"resourceType"</span><span style='color:#808030; '>:</span><span style='color:#0000e6; '>"IdentityRequest"</span><span style='color:#808030; '>,</span> <span style='color:#0000e6; '>"reqID"</span><span style='color:#808030; '>:</span><span style='color:#0000e6; '>"101"</span><span style='color:#808030; '>,</span> <span style='color:#0000e6; '>"reqTxt"</span><span style='color:#808030; '>:</span><span style='color:#0000e6; '>"AddPerson"</span><span style='color:#808030; '>,</span> <span style='color:#0000e6; '>"Inputs"</span><span style='color:#808030; '>:</span> <span style='color:#800080; '>{</span> <span style='color:#0000e6; '>"currCtx"</span><span style='color:#808030; '>:</span><span style='color:#0000e6; '>""</span><span style='color:#808030; '>,</span> <span style='color:#0000e6; '>"personType"</span><span style='color:#808030; '>:</span><span style='color:#0000e6; '>""</span><span style='color:#808030; '>,</span> <span style='color:#800080; '>}</span> <span style='color:#800080; '>}</span>
+</pre>
+<!--Created using ToHtml.com on 2019-10-01 13:50:21 UTC -->
+<br>
+currCtx is the context value obtained from the Connect call. This is important - without the right value here, you may get a failure. 
+<br>
+personType: This indicates the type of the user being added - HCW or Patient.
+<br>
+<br>
+Output:
+<br>
+<br>
+<pre style='color:#000000;background:#ffffff;'><span style='color:#800080; '>{</span> <span style='color:#0000e6; '>"resourceType"</span><span style='color:#808030; '>:</span><span style='color:#0000e6; '>"IdentityRequest"</span><span style='color:#808030; '>,</span> <span style='color:#0000e6; '>"reqTxt"</span><span style='color:#808030; '>:</span><span style='color:#0000e6; '>"AddPerson"</span><span style='color:#808030; '>,</span> <span style='color:#0000e6; '>"Outputs"</span><span style='color:#808030; '>:</span> <span style='color:#800080; '>{</span> <span style='color:#0000e6; '>"addDone"</span><span style='color:#808030; '>:</span><span style='color:#0000e6; '>""</span><span style='color:#808030; '>,</span> <span style='color:#0000e6; '>"guid"</span><span style='color:#808030; '>:</span><span style='color:#0000e6; '>""</span><span style='color:#808030; '>,</span> <span style='color:#0000e6; '>"name"</span><span style='color:#808030; '>:</span><span style='color:#0000e6; '>""</span><span style='color:#808030; '>,</span> <span style='color:#0000e6; '>"dob"</span><span style='color:#808030; '>:</span><span style='color:#0000e6; '>""</span> <span style='color:#800080; '>}</span> <span style='color:#800080; '>}</span> 
+</pre>
+<!--Created using ToHtml.com on 2019-10-01 13:50:54 UTC -->
+<br>
+<p>Here, we need to ensure that the "addDone" in Outputs is true otherwise the login process was withdrawn either voluntarily or due to some issue. 
+<br>
+The "guid" in Outputs is the GUID of the user added or updated. This may be used by the calling app if required. 
+<br>
+Name and dob refer to the name and date of birth (approximate computation) of the user.
+</p>
+<br>
+<br>
+<i>3. HandlePOS</i>
+<br>
+<br>
+Input:
+<br>
+<pre style='color:#000000;background:#ffffff;'><span style='color:#800080; '>{</span> <span style='color:#0000e6; '>"resourceType"</span><span style='color:#808030; '>:</span><span style='color:#0000e6; '>"IdentityRequest"</span><span style='color:#808030; '>,</span> <span style='color:#0000e6; '>"reqID"</span><span style='color:#808030; '>:</span><span style='color:#0000e6; '>"101"</span><span style='color:#808030; '>,</span> <span style='color:#0000e6; '>"reqTxt"</span><span style='color:#808030; '>:</span><span style='color:#0000e6; '>"HandlePOS"</span><span style='color:#808030; '>,</span> <span style='color:#0000e6; '>"Inputs"</span><span style='color:#808030; '>:</span> <span style='color:#800080; '>{</span> <span style='color:#0000e6; '>"currCtx"</span><span style='color:#808030; '>:</span><span style='color:#0000e6; '>""</span> <span style='color:#800080; '>}</span> <span style='color:#800080; '>}</span> 
+</pre>
+<!--Created using ToHtml.com on 2019-10-01 14:11:17 UTC -->
+<br>
+Output:
+<br>
+<pre style='color:#000000;background:#ffffff;'><span style='color:#800080; '>{</span> <span style='color:#0000e6; '>"resourceType"</span><span style='color:#808030; '>:</span><span style='color:#0000e6; '>"IdentityRequest"</span><span style='color:#808030; '>,</span> <span style='color:#0000e6; '>"reqTxt"</span><span style='color:#808030; '>:</span><span style='color:#0000e6; '>"HandlePOS"</span><span style='color:#808030; '>,</span> <span style='color:#0000e6; '>"Outputs"</span><span style='color:#808030; '>:</span> <span style='color:#800080; '>{</span> <span style='color:#0000e6; '>"posDone"</span><span style='color:#808030; '>:</span><span style='color:#0000e6; '>""</span><span style='color:#808030; '>,</span> <span style='color:#800080; '>}</span> <span style='color:#800080; '>}</span>
+</pre>
+<!--Created using ToHtml.com on 2019-10-01 14:12:12 UTC -->
+<br>
+Here, we need to check the posDone for “true” or “false”. True indicates the POS was done successfully.
+<br>
+Note: In calling apps, please make sure that the intent call gives a "RESULT_OK" response code. Anything other than that indicates an issue.
+<br>
+Some sample code:
+<br>
+<pre style='color:#000000;background:#ffffff;'>if (resultCode == RESULT_OK) <span style='color:#800080; '>{</span> <span style='color:#696969; '>//check the output JSON for specific fields you want. } else if (resultCode == RESULT_CANCELED) { //error }</span>
+</pre>
+<!--Created using ToHtml.com on 2019-10-01 14:09:22 UTC -->
+<br>
+Please review the IdMTest app as well: https://bitbucket.org/IPRD/idmtest/src/master/
+<br>
+This has sample code where we call each of the above 3 API’s and parse their outputs. Please use that as a reference when you implement your app and call Identity service.
+<br>
+<br>
+<b>Guidelines for using IdM</b>
+<br>
+<br>
+<b>Basic setup:</b>
+<br>
+<ol>
+<li>Please make sure you install both IdM and the app which would call IdM. IdM runs as a separate app, but does not have its own launching UI and will not be visible as an app in the device. (It will however be called by the calling app)</li>
+<li>Once done, the IdM app will prompt the user to give permissions to access Location, file storage, Camera and other services. Please make sure that you select Yes for all of them. This is required for the app to work.</li>
+<li>In general, do check if all the permissions are set. This could be done by opening up the app details in Settings. See the below image for an example.</li>
+</ol>
+<br>
+<br>
+<img src="app_permissions.png" width="900" height="1600" alt="" title="" />
+<br>
+<br>
+<b>Licenses</b>
+<br>
+<ol>
+<li>Please make sure you buy the Neurotec licenses required for the app</li>
+<li>Before starting the apps, we need to make sure the Neurotec licenses for biometric detection are installed in the phone</li>
+<li>Go to folder( path “/mnt/sdcard/” or “Internal Storage”) in Android device.</li>
+<li>Create folder by name “Neurotechnology” in above path</li>
+<li>Create a subfolder in above folder as “Licenses”.</li>
+<li>In Neurotechnology folder we need to copy “Irises.ndf” and “Fingers.ndf” files. In License folder we need to copy *.lic files.</li>
+<li>Please see the images below.</li>
+<br>
+<br>
+<img src="license1.png" width="900" height="1600" alt="" title="" />
+<br>
+<br>
+<img src="license2.png" width="900" height="1600" alt="" title="" />
+</ol>
+<br>
+<br>
+<b>Running the app</b>
+<br>
+<br>
+Please make sure internet is ON while starting the app as we need an internet connection to validate the license installed.
+<br>
+<br>
+<b>Other features</b>
+<br>
+<br>
+<ol type="1">
+<li>Ability to delete users (HCW/Patient or both).</li>
+<li>Ability to replicate data from the local sqlite db to a remote CouchDB instance.</li>
+</ol>
+<br>
+<br>
+<b>Preferences</b>
+<br>
+<br>
+There is a Preferences tab in the consent screen that helps us configure settings. That could be used for:
+<br>
+<ol type="1">
+    <li>Switching between Credence ID device or the Watson mini device for biometric data.</li>
+    <li>Configuring a remote IP address to replicate the DB. (Make sure a DB is setup at that remote location for use).</li>
+    <li>Deleting all existing HCW and/or patient entries.</li>
+</ol> 
+<br>
+When you update any of the preference settings, make sure you hit the Back button from the consent screen and then start IdM again.
+<br>
+<br>
+<b>Biometric devices Integrated</b>
+<br>
+<br>
+Right now, we support the following biometric devices:
+<ol type="1">
+    <li>Watson Mini fingerprint scanner.</li>
+    <li>Credence ID iris and fingerprint scanner.</li>
+</ol> 
+
+Both require the appropriate licenses to be installed on the device on which we are running the Identity apk. By default, the biometric device is set to Watson mini in the IdM app. However, there is a Preference tab on the right hand top corner of the initial consent screen, where we could change this to Credence ID.
+<br>
+<br>
+<b>Approach for using new Biometric devices</b>
+<br>
+<br>
+ <b>Biometric Matching algorithms integrated</b>
+<br>
+<br>
+<b><u>Healthcube device integration</u></b>
+<br>
+<br>
+<p>Health cube is a 3rd party device that helps us capture vital health information and blood tests for an individual like pulse,blood pressure,temperature and even do blood tests. It's a device that can do most tests normally done in a diagnostic lab.</p>
+<br>
+<br>
+It also comes with an app that can be used to get the readings from the device.
+<br>
+<br>
+<p>We have integrated a sample machine guided diagnosis app with this device. Right now, we only support the following readings from the device: blood pressure,pulse,SPO2. In addition, height, weight and temperature may be entered manually.</p>
+
+<p>From our app, we call the Healthcube app via an intent call and when the intent call returns, we get the values entered in the app (either manually or via the device) Please see the JSON formats used in the intent call.</p>
+<br>
+<br>
+<i>Input JSON format:</i>
+<br>
+<br>
+PATIENT_DETAILS : {"identifier":[{"system":"iprd","use":"usual","value":"patientid123"}],"resourceType":"Patient","address":[{"country":"india","type":"physical","use":"home"}],"birthDate":"2004-06-24","gender":"male","name":[{"given":["john doe"]}],"telecom":[{"rank":1,"system":"phone","use":"mobile","value":"9999887776"}]} 
+<br>
+TEST_DETAILS : ["PULSE_OXIMETER","WEIGHT","BLOOD_PRESSURE","CHOLESTEROL","CHIKUNGUNYA","SYPHILIS"] 
+<br>
+PARTNER_LOGIN_ID : +911111133333 PARTNER_LOGIN_SECRET : aXFZmNxI0YNo6Llyax1qqQ==
+<br>
+<br>
+<br>
+<i>Output JSON format:</i>
+<br>
+<br>
+{"entry":[{"resource":{"identifier":[{"system":"Ezdx","use":"usual","value":"08188c64-fcda-468e-a48d-fee546d51c02"}],"resourceType":"Observation","code":{"coding":[{"code":"8310-5","display":"Body temperature","system":"http://loinc.org"}]},"subject":{"identifier":[{"system":"iprd","use":"usual","value":"patientid123"}]},"valueQuantity":{"code":"°F","system":"http://unitsofmeasure.org","unit":"°F","value":99.0}}},{"resource":{"identifier":[{"system":"Ezdx","use":"usual","value":"2dd95a76-2171-44ac-8f94-f014d8ae97d5"}],"resourceType":"Observation","code":{"coding":[{"code":"29463-7","display":"Body Weight","system":"http://loinc.org"}]},"subject":{"identifier":[{"system":"iprd","use":"usual","value":"patientid123"}]},"valueQuantity":{"code":"Kgs","system":"http://unitsofmeasure.org","unit":"Kgs","value":88.0}}},{"resource":{"identifier":[{"system":"Ezdx","use":"usual","value":"776a4fb4-a14d-486c-bdfa-54545b2f9060"}],"resourceType":"Observation","code":{"coding":[{"code":"8302-2","display":"Body height","system":"http://loinc.org"}]},"subject":{"identifier":[{"system":"iprd","use":"usual","value":"patientid123"}]},"valueQuantity":{"code":"cms","system":"http://unitsofmeasure.org","unit":"cms","value":177.0}}}],"resourceType":"Bundle","type":"collection"}
+
+<br>
+<br>
+<b><u>Videovitals integration</u></b>
+<br>
+<br>
+<p>Videovitals is an app that can be used to get the heart rate of an individual from a live face capture. The MGD app integrates with this app via an intent call and receives the heart rate value (as computed by the app) in response.</p>
+<br>
+Here are the JSON structures used -
+<br>
+Input JSON:
+<br>
+<br>
+{ "entry": [{ "fullUrl": "http://iprdgroup.com/FHIR/Resources", "resource": { "resourceType": "ServiceRequest", "id": "example_request_HR", "status": "active", "intent": "original-order", "code": { "coding": [{ "system": "http://loinc.org", "code": "8867-4", "display": "Heart rate" }], "text": "Heart rate" }, "subject": { "reference": "Patient/patient_example" } } }], "resourceType": "Bundle", "type": "collection" }
+<br>
+<br>
+Output JSON:
+<br>
+<br>
+{ "entry": [{ "fullUrl": "http:\/\/iprdgroup.com\/FHIR\/Resources\/Observation2", "resource": { "basedOn": [], "code": { "coding": [{ "code": "8867-4", "display": "Heart rate", "system": "http:\/\/loinc.org" }] }, "id": "Observation\/obs1", "identifier": [{ "system": "http:\/\/www.jumper.com", "type": { "coding": [{ "code": "8867-4", "display": "Heart rate", "system": "http:\/\/loinc.org" }] }, "use": "usual", "value": "5ff75a42-6820-4e14-b7ae-934ceda8d3d6" }], "resourceType": "Observation", "status": "preliminary", "valueQuantity": { "code": "beats\/minute", "system": "http:\/\/unitsofmeasure.org", "unit": "beats\/minute", "value": 76 }, "effectiveDateTime": "2019-09-17T16:42:32.482+05:30", "subject": { "reference": "Patient\/patient_example" } } }], "resourceType": "Bundle", "type": "collection" }
+<br>
+<br>
+<b><u>Medsinc app integration</u></b>
+<br>
+<br>
+<p>Medsinc is a medical diagnosis app by a company named thinkMD. Using a custom algorithm,it takes in patient vital information, demographic information and various assessments. Based on this, it provides severity for various medical conditions as well as a treatment plan.</p>
+
+<p>Our Machine guided diagnosis app (MGD) integrates with the Medsinc app via a custom Chrome tab. The MGD app provides the Medsinc app with any vital information already captured which in turn gets pre-populated in the medsinc app. Once the assessments are done, it returns back to the MGD app.</p>
+<br>
+<br>
+Here are the JSON formats used:
+<br>
+<br>
+<i>Input JSON:</i>
+<br>
+<br>
+<p><div xmlns='http://www.w3.org/1999/xhtml'>Encounter with patient @example</div>", "status": "additional" }, "class": { "system": "http://hl7.org/fhir/v3/ActCode", "code": "HH", "display": "home health" } } }, { "resource": { "active": true, "id": "HCW_790e59ce-7bdc-4c04-a930-324e0ca3512e", "identifier": [{ "system": "example", "type": { "coding": [] }, "use": null, "value": null }], "name": [{ "family": "Careful", "given": [], "mapA": { "given": ["Uk"], "prefix": ["Mr"] } }], "qualification": {}, "resourceType": "Practitioner" } }], "resourceType": "Bundle", "type": "collection" }</p>
+
+<br>
+<br>
+<i>Output JSON:</i>
+<br>
+<br>
+<p><div xmlns='http://www.w3.org/1999/xhtml'>Encounter with patient @example</div>", "status": "additional" }, "class": { "system": "http://hl7.org/fhir/v3/ActCode", "code": "HH", "display": "home health" }, "statusHistory": [{ "status": "arrived", "period": { "start": "2019-09-10T12:55:17.504Z", "end": "2019-09-10T12:55:17.504Z" } }] } }, { "resource": { "resourceType": "Condition", "id": "respiratory_distress", "text": { "status": "generated", "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"> respiratory_distress Condition </div>" }, "severity": { "coding": [{ "system": "http://snomed.info/sct", "code": "24484000", "display": "severe" }] }, "clinicalStatus": { "coding": [{ "system": "http://terminology.hl7.org/CodeSystem/condition-clinical", "code": "active" }] }, "verificationStatus": { "coding": [{ "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status", "code": "unconfirmed" }] }, "code": { "coding": [{ "system": "http://snomed.info/sct", "code": "50043002", "display": "respiratory_distress" }] }, "subject": { "reference": "id1560451639623", "display": "child" }, "encounter": { "reference": "id1560452012016", "display": " 1 first interaction with Medsinc" }, "asserter": { "reference": "id1560454981713" }, "onsetDateTime": "2019-09-10T12:55:17.505Z", "recordedDate": "2019-09-10T12:55:17.505Z" } }, { "resource": { "resourceType": "Condition", "id": "dehydration", "text": { "status": "generated", "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"> dehydration Condition </div>" }, "severity": { "coding": [{ "system": "http://snomed.info/sct", "code": "6736007", "display": "moderate" }] }, "clinicalStatus": { "coding": [{ "system": "http://terminology.hl7.org/CodeSystem/condition-clinical", "code": "active" }] }, "verificationStatus": { "coding": [{ "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status", "code": "unconfirmed" }] }, "code": { "coding": [{ "system": "http://snomed.info/sct", "code": "34095006", "display": "dehydration" }] }, "subject": { "reference": "id1560451639623", "display": "child" }, "encounter": { "reference": "id1560452012016", "display": " 1 first interaction with Medsinc" }, "asserter": { "reference": "id1560454981713" }, "onsetDateTime": "2019-09-10T12:55:17.522Z", "recordedDate": "2019-09-10T12:55:17.522Z" } }, { "resource": { "resourceType": "Condition", "id": "sepsis", "text": { "status": "generated", "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"> sepsis Condition </div>" }, "severity": { "coding": [{ "system": "http://snomed.info/sct", "code": "none", "display": "none" }] }, "clinicalStatus": { "coding": [{ "system": "http://terminology.hl7.org/CodeSystem/condition-clinical", "code": "active" }] }, "verificationStatus": { "coding": [{ "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status", "code": "unconfirmed" }] }, "code": { "coding": [{ "system": "http://snomed.info/sct", "code": "91302008", "display": "sepsis" }] }, "subject": { "reference": "id1560451639623", "display": "child" }, "encounter": { "reference": "id1560452012016", "display": " 1 first interaction with Medsinc" }, "asserter": { "reference": "id1560454981713" }, "onsetDateTime": "2019-09-10T12:55:17.522Z", "recordedDate": "2019-09-10T12:55:17.522Z" } }, { "resource": { "resourceType": "Condition", "id": "malnutrition", "text": { "status": "generated", "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"> malnutrition Condition </div>" }, "severity": { "coding": [{ "system": "http://snomed.info/sct", "code": "24484000", "display": "severe" }] }, "clinicalStatus": { "coding": [{ "system": "http://terminology.hl7.org/CodeSystem/condition-clinical", "code": "active" }] }, "verificationStatus": { "coding": [{ "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status", "code": "unconfirmed" }] }, "code": { "coding": [{ "system": "http://snomed.info/sct", "code": "2492009", "display": "malnutrition" }] }, "subject": { "reference": "id1560451639623", "display": "child" }, "encounter": { "reference": "id1560452012016", "display": " 1 first interaction with Medsinc" }, "asserter": { "reference": "id1560454981713" }, "onsetDateTime": "2019-09-10T12:55:17.523Z", "recordedDate": "2019-09-10T12:55:17.523Z" } }, { "resource": { "resourceType": "Condition", "id": "anemia", "text": { "status": "generated", "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"> anemia Condition </div>" }, "severity": { "coding": [{ "system": "http://snomed.info/sct", "code": "6736007", "display": "moderate" }] }, "clinicalStatus": { "coding": [{ "system": "http://terminology.hl7.org/CodeSystem/condition-clinical", "code": "active" }] }, "verificationStatus": { "coding": [{ "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status", "code": "unconfirmed" }] }, "code": { "coding": [{ "system": "http://snomed.info/sct", "code": "271737000", "display": "anemia" }] }, "subject": { "reference": "id1560451639623", "display": "child" }, "encounter": { "reference": "id1560452012016", "display": " 1 first interaction with Medsinc" }, "asserter": { "reference": "id1560454981713" }, "onsetDateTime": "2019-09-10T12:55:17.523Z", "recordedDate": "2019-09-10T12:55:17.523Z" } }, { "resource": { "resourceType": "Condition", "id": "measles", "text": { "status": "generated", "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"> measles Condition </div>" }, "severity": { "coding": [{ "system": "http://snomed.info/sct", "code": "none", "display": "none" }] }, "clinicalStatus": { "coding": [{ "system": "http://terminology.hl7.org/CodeSystem/condition-clinical", "code": "active" }] }, "verificationStatus": { "coding": [{ "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status", "code": "unconfirmed" }] }, "code": { "coding": [{ "system": "http://snomed.info/sct", "code": "14189004", "display": "measles" }] }, "subject": { "reference": "id1560451639623", "display": "child" }, "encounter": { "reference": "id1560452012016", "display": " 1 first interaction with Medsinc" }, "asserter": { "reference": "id1560454981713" }, "onsetDateTime": "2019-09-10T12:55:17.524Z", "recordedDate": "2019-09-10T12:55:17.524Z" } }, { "resource": { "resourceType": "Condition", "id": "malaria", "text": { "status": "generated", "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"> malaria Condition </div>" }, "severity": { "coding": [{ "system": "http://snomed.info/sct", "code": "none", "display": "none" }] }, "clinicalStatus": { "coding": [{ "system": "http://terminology.hl7.org/CodeSystem/condition-clinical", "code": "active" }] }, "verificationStatus": { "coding": [{ "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status", "code": "unconfirmed" }] }, "code": { "coding": [{ "system": "http://snomed.info/sct", "code": "61462000", "display": "malaria" }] }, "subject": { "reference": "id1560451639623", "display": "child" }, "encounter": { "reference": "id1560452012016", "display": " 1 first interaction with Medsinc" }, "asserter": { "reference": "id1560454981713" }, "onsetDateTime": "2019-09-10T12:55:17.525Z", "recordedDate": "2019-09-10T12:55:17.525Z" } }, { "resource": { "resourceType": "Condition", "id": "skin_infection", "text": { "status": "generated", "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"> skin_infection Condition </div>" }, "severity": { "coding": [{ "system": "http://snomed.info/sct", "code": "none", "display": "none" }] }, "clinicalStatus": { "coding": [{ "system": "http://terminology.hl7.org/CodeSystem/condition-clinical", "code": "active" }] }, "verificationStatus": { "coding": [{ "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status", "code": "unconfirmed" }] }, "code": { "coding": [{ "system": "http://snomed.info/sct", "code": "19824006", "display": "skin_infection" }] }, "subject": { "reference": "id1560451639623", "display": "child" }, "encounter": { "reference": "id1560452012016", "display": " 1 first interaction with Medsinc" }, "asserter": { "reference": "id1560454981713" }, "onsetDateTime": "2019-09-10T12:55:17.525Z", "recordedDate": "2019-09-10T12:55:17.525Z" } }, { "resource": { "resourceType": "Condition", "id": "dysentery", "text": { "status": "generated", "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"> dysentery Condition </div>" }, "severity": { "coding": [{ "system": "http://snomed.info/sct", "code": "none", "display": "none" }] }, "clinicalStatus": { "coding": [{ "system": "http://terminology.hl7.org/CodeSystem/condition-clinical", "code": "active" }] }, "verificationStatus": { "coding": [{ "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status", "code": "unconfirmed" }] }, "code": { "coding": [{ "system": "http://snomed.info/sct", "code": "46799006", "display": "dysentery" }] }, "subject": { "reference": "id1560451639623", "display": "child" }, "encounter": { "reference": "id1560452012016", "display": " 1 first interaction with Medsinc" }, "asserter": { "reference": "id1560454981713" }, "onsetDateTime": "2019-09-10T12:55:17.526Z", "recordedDate": "2019-09-10T12:55:17.526Z" } }, { "resource": { "resourceType": "Condition", "id": "meningitis", "text": { "status": "generated", "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"> meningitis Condition </div>" }, "severity": { "coding": [{ "system": "http://snomed.info/sct", "code": "24484000", "display": "severe" }] }, "clinicalStatus": { "coding": [{ "system": "http://terminology.hl7.org/CodeSystem/condition-clinical", "code": "active" }] }, "verificationStatus": { "coding": [{ "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status", "code": "unconfirmed" }] }, "code": { "coding": [{ "system": "http://snomed.info/sct", "code": "7180009", "display": "meningitis" }] }, "subject": { "reference": "id1560451639623", "display": "child" }, "encounter": { "reference": "id1560452012016", "display": " 1 first interaction with Medsinc" }, "asserter": { "reference": "id1560454981713" }, "onsetDateTime": "2019-09-10T12:55:17.527Z", "recordedDate": "2019-09-10T12:55:17.527Z" } }, { "resource": { "resourceType": "Condition", "id": "uti", "text": { "status": "generated", "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"> uti Condition </div>" }, "severity": { "coding": [{ "system": "http://snomed.info/sct", "code": "none", "display": "none" }] }, "clinicalStatus": { "coding": [{ "system": "http://terminology.hl7.org/CodeSystem/condition-clinical", "code": "active" }] }, "verificationStatus": { "coding": [{ "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status", "code": "unconfirmed" }] }, "code": { "coding": [{ "system": "http://snomed.info/sct", "code": "68566005", "display": "uti" }] }, "subject": { "reference": "id1560451639623", "display": "child" }, "encounter": { "reference": "id1560452012016", "display": " 1 first interaction with Medsinc" }, "asserter": { "reference": "id1560454981713" }, "onsetDateTime": "2019-09-10T12:55:17.527Z", "recordedDate": "2019-09-10T12:55:17.527Z" } }, { "resource": { "resourceType": "Condition", "id": "ear_infection", "text": { "status": "generated", "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"> ear_infection Condition </div>" }, "severity": { "coding": [{ "system": "http://snomed.info/sct", "code": "none", "display": "none" }] }, "clinicalStatus": { "coding": [{ "system": "http://terminology.hl7.org/CodeSystem/condition-clinical", "code": "active" }] }, "verificationStatus": { "coding": [{ "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status", "code": "unconfirmed" }] }, "code": { "coding": [{ "system": "http://snomed.info/sct", "code": "129127001", "display": "ear_infection" }] }, "subject": { "reference": "id1560451639623", "display": "child" }, "encounter": { "reference": "id1560452012016", "display": " 1 first interaction with Medsinc" }, "asserter": { "reference": "id1560454981713" }, "onsetDateTime": "2019-09-10T12:55:17.528Z", "recordedDate": "2019-09-10T12:55:17.528Z" } }, { "resource": { "resourceType": "List", "subject": { "display": "id1560451639623" }, "entry": [{ "item": { "reference": "Condition/respiratory_distress" } }, { "item": { "reference": "Condition/dehydration" } }, { "item": { "reference": "Condition/sepsis" } }, { "item": { "reference": "Condition/malnutrition" } }, { "item": { "reference": "Condition/anemia" } }, { "item": { "reference": "Condition/measles" } }, { "item": { "reference": "Condition/malaria" } }, { "item": { "reference": "Condition/skin_infection" } }, { "item": { "reference": "Condition/dysentery" } }, { "item": { "reference": "Condition/meningitis" } }, { "item": { "reference": "Condition/uti" } }, { "item": { "reference": "Condition/ear_infection" } }] } }], "resourceType": "Bundle", "type": "collection" }</p>
+ 
+<br>
+<br>
+<u><b>Jumper devices (Pulse oximeter and thermometer) integration</b></u>
+<br>
+<br>
+<p>The MGD app also integrates with a pulse oximeter and a thermometer device over bluetooth. From this, we get the pulse, SPO2 and temperature.</p>
+
+Here are the JSON structures -
+<br>
+<br>
+<i><u>Input JSON:</u></i>
+<br>
+<br>
+<i>Pulse and SPO2 -</i>
+<br>
+<br>
+<p>{ "entry": [{ "fullUrl": "http://iprdgroup.com/FHIR/Resources", "resource": { "resourceType": "ServiceRequest", "id": "example_request_HR", "status": "active", "intent": "original-order", "code": { "coding": [{ "system": "http://loinc.org", "code": "8867-4", "display": "Heart rate" }], "text": "Heart rate" }, "subject": { "reference": "Patient/patient_example" } } }, { "fullUrl": "http://iprdgroup.com/FHIR/Resources", "resource": { "resourceType": "ServiceRequest", "id": "example_request_HR", "status": "active", "intent": "original-order", "code": { "coding": [{ "system": "http://loinc.org", "code": "59408-5", "display": "Oxygen saturation in Arterial blood by Pulse oximetry" }], "text": "Oxygen saturation in Arterial blood by Pulse oximetry" }, "subject": { "reference": "Patient/patient_example" } } }], "resourceType": "Bundle", "type": "collection" }
+</p>
+<br>
+<br>
+<i>Temperature - </i>
+<br>
+<br>
+<p>{ "entry": [{ "fullUrl": "http://iprdgroup.com/FHIR/Resources", "resource": { "resourceType": "ServiceRequest", "id": "example_request_HR", "status": "active", "intent": "original-order", "code": { "coding": [{ "system": "http://loinc.org", "code": "8310-5", "display": "Body temperature special circumstances" }], "text": "Body Temperature" }, "subject": { "reference": "Patient/patient_example" } } }], "resourceType": "Bundle", "type": "collection" }</p>
+
+<br>
+<br>
+<i><u>Output JSON:</u></i>
+<br>
+<br>
+<i>Pulse and SPO2 -</i>
+<br>
+<br>
+<p>{ "entry": [{ "fullUrl": "http:\/\/iprdgroup.com\/FHIR\/Resources\/Observation2", "resource": { "basedOn": [], "code": { "coding": [{ "code": "8867-4", "display": "Heart rate", "system": "http:\/\/loinc.org" }] }, "effectiveDateTime": "2019-09-17T15:06:36.446+05:30", "id": "Observation\/obs1", "identifier": [{ "system": "http:\/\/www.jumper.com", "type": { "coding": [{ "code": "8867-4", "display": "Heart rate", "system": "http:\/\/loinc.org" }] }, "use": "usual", "value": "5ff75a42-6820-4e14-b7ae-934ceda8d3d6" }], "resourceType": "Observation", "status": "preliminary", "subject": { "identifier": { "system": "http:\/\/www.jumper.com", "type": { "coding": [{ "code": "8867-4", "display": "Heart rate", "system": "http:\/\/loinc.org" }] }, "use": "usual", "value": "5ff75a42-6820-4e14-b7ae-934ceda8d3d6" } }, "valueQuantity": { "code": "beats\/minute", "system": "http:\/\/unitsofmeasure.org", "unit": "beats\/minute", "value": 68 } } }, { "fullUrl": "http:\/\/iprdgroup.com\/FHIR\/Resources\/Observation3", "resource": { "basedOn": [], "code": { "coding": [{ "code": "59408-5", "display": "Oxygen saturation in Arterial blood by Pulse oximetry", "system": "http:\/\/loinc.org" }] }, "effectiveDateTime": "2019-09-17T15:06:36.454+05:30", "id": "Observation\/obs1", "identifier": [{ "system": "http:\/\/www.jumper.com", "type": { "coding": [{ "code": "59408-5", "display": "Oxygen saturation in Arterial blood by Pulse oximetry", "system": "http:\/\/loinc.org" }] }, "use": "usual", "value": "5ff75a42-6820-4e14-b7ae-934ceda8d3d6" }], "resourceType": "Observation", "status": "preliminary", "subject": { "identifier": { "system": "http:\/\/www.jumper.com", "type": { "coding": [{ "code": "59408-5", "display": "Oxygen saturation in Arterial blood by Pulse oximetry", "system": "http:\/\/loinc.org" }] }, "use": "usual", "value": "5ff75a42-6820-4e14-b7ae-934ceda8d3d6" } }, "valueQuantity": { "code": "%", "system": "http:\/\/unitsofmeasure.org", "unit": "%", "value": 98 } } }], "resourceType": "Bundle", "type": "collection" }</p>
+
+<br>
+<br>
+<i>Temperature -</i>
+<br>
+<br>
+<p>{ "entry": [{ "fullUrl": "http:\/\/iprdgroup.com\/FHIR\/Resources\/Observation", "resource": { "basedOn": [], "code": { "coding": [{ "code": "8310-5", "display": "Body temperature", "system": "http:\/\/loinc.org" }] }, "effectiveDateTime": "2019-09-17T15:03:40.838+05:30", "id": "Observation\/obs1", "identifier": [{ "system": "http:\/\/www.jumper.com", "type": { "coding": [{ "code": "8310-5", "display": "Body temperature", "system": "http:\/\/loinc.org" }] }, "use": "usual", "value": "5ff75a42-6820-4e14-b7ae-934ceda8d3d6" }], "resourceType": "Observation", "status": "preliminary", "subject": { "identifier": { "system": "http:\/\/www.jumper.com", "type": { "coding": [{ "code": "8310-5", "display": "Body temperature", "system": "http:\/\/loinc.org" }] }, "use": "usual", "value": "5ff75a42-6820-4e14-b7ae-934ceda8d3d6" } }, "valueQuantity": { "code": "Fahrenheit", "system": "http:\/\/unitsofmeasure.org", "unit": "Fahrenheit", "value": 95.306 } } }], "resourceType": "Bundle", "type": "collection" }</p>
+<br>
+<br>
+<b>Approach for using new matching algorithms</b>
+<br>
+<br>
+<u><b>Data Validation System</b></u>
+<br>
+<br>
+
+<b>Standard interface definitions</b>
+<br>
+<br>
+Supported Data validation systems
+<br>
+<br>
+Approach for using other Data validation Systems
+<br>
+<br>
+Roadmap
+Sarvesh to work with KH to get an overview of future
+<br>
+<br>
+What is in pipeline (1-3 months)
+<br>
+<br>
+What to expect in 3-6 months?
+<br>
+<br>
+Long term roadmap
+<br>
+<br>
+<b><u>Code repository</u></b>
+<br>
+<br>
+Orientation Guide
+<br>
+<br>
+What is where
+<br>
+<br>
+How to report issues
+<br>
+<br>
+Services available for reuse
+<br>
+<br>
+Sample Applications
+<br>
+<br>
+<u><b>Integrators view</b></u>
+<br>
+<br>
+Example Use Case Scenarios for Integrators
+<br>
+<br>
+Quick deployment of a Mobile Survey system for deploying Ebola Vaccine
+<br>
+<br>
+<b><u>Capability Providers View</u></b>
+<br>
+<br>
+Why should a Capability Provider of Subjective/Objective care?
+<br>
+<br>
+Examples of groups who are working with IPRD
+<br>
+<br>
+How to get started
+<br>
+<br>
+Onboarding a new Objective Measurement Device to the Platform
+<br>
+<br>
+Onboarding a new Subjective Measurement System to the Platform
+<br>
+<br>  
+  </body>
+</html>
